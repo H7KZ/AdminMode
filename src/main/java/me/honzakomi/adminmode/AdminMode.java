@@ -2,33 +2,26 @@ package me.honzakomi.adminmode;
 
 import me.honzakomi.adminmode.commands.AdminCommand;
 import me.honzakomi.adminmode.database.PlayerItemsDB;
-import org.bukkit.ChatColor;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
-
-import static org.bukkit.Bukkit.getServer;
 
 public final class AdminMode extends JavaPlugin {
 
     public static AdminMode plugin;
 
-    public static Team admins;
+    public static LuckPerms luckPerms;
 
     @Override
     public void onEnable() {
         plugin = this;
 
-        Scoreboard board = getServer().getScoreboardManager().getNewScoreboard();
-        admins = board.getTeam("admins");
-        if (admins == null) {
-            admins = board.registerNewTeam("admins");
-        }
-        admins.setPrefix(ChatColor.RED + "[Admin]");
+        luckPerms = LuckPermsProvider.get();
 
         getCommand("admin").setExecutor(new AdminCommand());
 
         PlayerItemsDB.setup();
+        PlayerItemsDB.get().addDefault("test", "test");
         PlayerItemsDB.save();
 
         System.out.println("ADMIN MODE PLUGIN LOADED SUCCESSFULLY!");

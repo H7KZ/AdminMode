@@ -5,3 +5,7 @@ api-version: 1.18
 authors: [ HonzaKOMI ]
 description: you can go to admin mode and back
 website: https://kominek.pages.dev
+commands:
+  admin:
+    usage: </command>
+    description: makes you admin mode

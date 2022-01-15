@@ -14,7 +14,7 @@ public class PlayerItemsDB {
 
     public static void setup() {
 
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("AdminModePlayerItems").getDataFolder(), "playeritems.yml");
+        file = new File(Bukkit.getServer().getPluginManager().getPlugin("AdminMode").getDataFolder(), "playerItems.yml");
 
         if (!file.exists()) {
             try {
