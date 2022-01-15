@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class PlayerItemsDB {
 
@@ -14,7 +15,7 @@ public class PlayerItemsDB {
 
     public static void setup() {
 
-        file = new File(Bukkit.getServer().getPluginManager().getPlugin("AdminMode").getDataFolder(), "playerItems.yml");
+        file = new File(Objects.requireNonNull(Bukkit.getServer().getPluginManager().getPlugin("AdminMode")).getDataFolder(), "playerItems.yml");
 
         if (!file.exists()) {
             try {

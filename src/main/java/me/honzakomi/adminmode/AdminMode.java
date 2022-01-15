@@ -6,6 +6,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class AdminMode extends JavaPlugin {
 
     public static AdminMode plugin;
@@ -18,7 +20,7 @@ public final class AdminMode extends JavaPlugin {
 
         luckPerms = LuckPermsProvider.get();
 
-        getCommand("admin").setExecutor(new AdminCommand());
+        Objects.requireNonNull(getCommand("admin")).setExecutor(new AdminCommand());
 
         PlayerItemsDB.setup();
         PlayerItemsDB.get().addDefault("test", "test");
