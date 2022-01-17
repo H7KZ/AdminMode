@@ -13,14 +13,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static me.honzakomi.adminmode.AdminMode.*;
 
@@ -28,7 +27,7 @@ import static me.honzakomi.adminmode.AdminMode.*;
 public class AdminCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player)) {
             sender.sendMessage("You need to be a player to use this command!");
@@ -37,108 +36,174 @@ public class AdminCommand implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (command.getName().equalsIgnoreCase("admin") && args.length == 0) {
+        if (command.getName().equalsIgnoreCase(Objects.requireNonNull(config.getString("adminConfig.commands.nameOfTheMainCommand")))) {
 
-            Group groupAdminAccess = luckPerms.getGroupManager().getGroup("adminModeAccess");
+            Group groupAdminAccess = luckPerms.getGroupManager().getGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.accessGroupName")));
             if (groupAdminAccess == null) {
-                sender.sendMessage(ChatColor.RED + "There is an error! I couldn't find group adminModeAccess! To fix this issue you need to reload the plugin.");
+                p.sendMessage(ChatColor.RED + "There is an error! Couldn't find group " + config.getString("luckPerms.groups.prefixGroupName") + "! To fix this issue you need to reload the plugin.");
                 return true;
             }
-            Group groupAdminPrefix = luckPerms.getGroupManager().getGroup("adminModeAccess");
+            Group groupAdminPrefix = luckPerms.getGroupManager().getGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.prefixGroupName")));
             if (groupAdminPrefix == null) {
-                sender.sendMessage(ChatColor.RED + "There is an error! I couldn't find group adminModePrefix! To fix this issue you need to reload the plugin.");
+                p.sendMessage(ChatColor.RED + "There is an error! Couldn't find group " + config.getString("luckPerms.groups.prefixGroupName") + "! To fix this issue you need to reload the plugin.");
                 return true;
             }
 
             String playerUUID = p.getUniqueId().toString();
 
-            if (isInGroup(p) && !PlayerItemsDB.get().getBoolean(playerUUID + ".isAdminMode")) {
+            //ADMIN MODE ENABLE
+            if (isInGroup(p, groupAdminAccess) && !PlayerItemsDB.get().getBoolean(playerUUID + ".isAdminMode")) {
 
-                ItemStack[] contentsArray = p.getInventory().getContents();
+                if (config.getBoolean("adminConfig.saving.saveInv")) {
+                    ItemStack[] contentsArray = p.getInventory().getStorageContents();
 
-                ItemStack[] armorContentsArray = p.getInventory().getArmorContents();
+                    List<ItemStack> contents = new ArrayList<>(Arrays.asList(contentsArray));
 
-                List<ItemStack> contents = new ArrayList<>();
-
-                for (ItemStack i : contentsArray) {
-                    if (i != null) {
-                        contents.add(i);
-                    }
+                    PlayerItemsDB.get().set(playerUUID + ".playerItems", contents);
+                    PlayerItemsDB.get().set(playerUUID + ".playerItemsSave", true);
+                    PlayerItemsDB.save();
                 }
 
-                List<ItemStack> armorContents = new ArrayList<>();
+                if (config.getBoolean("adminConfig.saving.saveArmor")) {
+                    ItemStack[] armorContentsArray = p.getInventory().getArmorContents();
 
-                for (ItemStack i : armorContentsArray) {
-                    if (i != null) {
-                        contents.add(i);
-                    }
+                    List<ItemStack> armorContents = new ArrayList<>(Arrays.asList(armorContentsArray));
+
+                    PlayerItemsDB.get().set(playerUUID + ".playerArmor", armorContents);
+                    PlayerItemsDB.get().set(playerUUID + ".playerArmorSave", true);
+                    PlayerItemsDB.save();
                 }
 
-                int playerExp = p.getTotalExperience();
+                if (config.getBoolean("adminConfig.saving.saveExp")) {
+                    int playerExp = p.getTotalExperience();
 
-                Location playerLoc = p.getLocation();
+                    PlayerItemsDB.get().set(playerUUID + ".playerExp", playerExp);
+                    PlayerItemsDB.get().set(playerUUID + ".playerExpSave", true);
+                    PlayerItemsDB.save();
+                }
+
+                if (config.getBoolean("adminConfig.saving.saveLocation")) {
+                    Location playerLoc = p.getLocation();
+
+                    PlayerItemsDB.get().set(playerUUID + ".playerLocation", playerLoc);
+                    PlayerItemsDB.get().set(playerUUID + ".playerLocationSave", true);
+                    PlayerItemsDB.save();
+                }
+
+                if (config.getBoolean("adminConfig.operator.operatorEnter")) {
+                    p.setOp(true);
+                }
+
+                if (config.getBoolean("adminConfig.erasingEnter.playerInv")) {
+                    p.getInventory().clear();
+                }
+
+                if (config.getBoolean("adminConfig.erasingEnter.playerArmor")) {
+                    p.getInventory().setHelmet(null);
+                    p.getInventory().setChestplate(null);
+                    p.getInventory().setLeggings(null);
+                    p.getInventory().setBoots(null);
+                }
+
+                if (config.getBoolean("adminConfig.erasingEnter.playerExp")) {
+                    p.setExp(0);
+                }
+
+                switch (config.getInt("adminConfig.gameModes.gameModeEnter")) {
+                    case 0:
+                        p.setGameMode(GameMode.SURVIVAL);
+                        break;
+                    case 1:
+                        p.setGameMode(GameMode.CREATIVE);
+                        break;
+                    case 2:
+                        p.setGameMode(GameMode.ADVENTURE);
+                        break;
+                    case 3:
+                        p.setGameMode(GameMode.SPECTATOR);
+                        break;
+                }
 
                 PlayerItemsDB.get().set(playerUUID + ".isAdminMode", true);
-                PlayerItemsDB.get().set(playerUUID + ".playerExp", playerExp);
-                PlayerItemsDB.get().set(playerUUID + ".playerItems", contents);
-                PlayerItemsDB.get().set(playerUUID + ".playerArmor", armorContents);
-                PlayerItemsDB.get().set(playerUUID + ".playerLocation", playerLoc);
                 PlayerItemsDB.save();
 
-                p.getInventory().clear();
-                p.getInventory().setHelmet(null);
-                p.getInventory().setChestplate(null);
-                p.getInventory().setLeggings(null);
-                p.getInventory().setBoots(null);
+                addToGroup(p, groupAdminPrefix);
 
-                p.setOp(true);
-                p.setGameMode(GameMode.CREATIVE);
-
-                addToGroup(p);
-
-                p.sendMessage(ChatColor.GREEN + "You are in ADMIN MODE! To Exit type /admin");
+                p.sendMessage(Objects.requireNonNull(config.getString("adminConfig.messages.adminModeEnabled")));
                 return true;
+            }
+            //ADMIN MODE DISABLED
+            else if (isInGroup(p, groupAdminAccess) && PlayerItemsDB.get().getBoolean(playerUUID + ".isAdminMode")) {
 
-            } else if (isInGroup(p) && PlayerItemsDB.get().getBoolean(playerUUID + ".isAdminMode")) {
+                if (config.getBoolean("adminConfig.erasingReturn.playerInv")) {
+                    p.getInventory().clear();
+                }
 
-                List<ItemStack> contentsList = (List<ItemStack>) PlayerItemsDB.get().get(playerUUID + ".playerItems");
-                List<ItemStack> armorContentsList = (List<ItemStack>) PlayerItemsDB.get().get(playerUUID + ".playerArmor");
-                ItemStack[] contents = contentsList.toArray(new ItemStack[0]);
-                ItemStack[] armorContents = armorContentsList.toArray(new ItemStack[0]);
-                Location playerLoc = (Location) PlayerItemsDB.get().get(playerUUID + ".playerLocation");
+                if (config.getBoolean("adminConfig.erasingReturn.playerArmor")) {
+                    p.getInventory().setHelmet(null);
+                    p.getInventory().setChestplate(null);
+                    p.getInventory().setLeggings(null);
+                    p.getInventory().setBoots(null);
+                }
+
+                if (PlayerItemsDB.get().getBoolean(playerUUID + ".playerItemsSave")) {
+                    List<ItemStack> contentsList = (List<ItemStack>) PlayerItemsDB.get().get(playerUUID + ".playerItems");
+
+                    assert contentsList != null;
+                    ItemStack[] contents = contentsList.toArray(new ItemStack[0]);
+
+                    p.getInventory().setContents(contents);
+                }
+
+                if (PlayerItemsDB.get().getBoolean(playerUUID + ".playerArmorSave")) {
+                    List<ItemStack> armorContentsList = (List<ItemStack>) PlayerItemsDB.get().get(playerUUID + ".playerArmor");
+
+                    assert armorContentsList != null;
+                    ItemStack[] armorContents = armorContentsList.toArray(new ItemStack[0]);
+
+                    p.getInventory().setArmorContents(armorContents);
+                }
+
+                if (PlayerItemsDB.get().getBoolean(playerUUID + ".playerLocationSave")) {
+                    Location playerLoc = (Location) PlayerItemsDB.get().get(playerUUID + ".playerLocation");
+
+                    assert playerLoc != null;
+                    p.teleport(playerLoc);
+                }
+
                 int playerExp = PlayerItemsDB.get().getInt(playerUUID + ".playerExp");
-
-                p.getInventory().clear();
-                p.getInventory().setHelmet(null);
-                p.getInventory().setChestplate(null);
-                p.getInventory().setLeggings(null);
-                p.getInventory().setBoots(null);
+                p.setTotalExperience(playerExp);
 
                 PlayerItemsDB.get().set(p.getUniqueId().toString(), null);
                 PlayerItemsDB.save();
 
-                assert contents != null;
-                p.getInventory().setContents(contents);
+                if (!config.getBoolean("adminConfig.operator.operatorReturn")) {
+                    p.setOp(false);
+                }
 
-                p.getInventory().setArmorContents(armorContents);
+                switch (config.getInt("adminConfig.gameModes.gameModeReturn")) {
+                    case 0:
+                        p.setGameMode(GameMode.SURVIVAL);
+                        break;
+                    case 1:
+                        p.setGameMode(GameMode.CREATIVE);
+                        break;
+                    case 2:
+                        p.setGameMode(GameMode.ADVENTURE);
+                        break;
+                    case 3:
+                        p.setGameMode(GameMode.SPECTATOR);
+                        break;
+                }
 
-                p.setTotalExperience(playerExp);
+                removeFromGroup(p, groupAdminPrefix);
 
-                assert playerLoc != null;
-                p.teleport(playerLoc);
-
-                p.setOp(false);
-
-                p.setGameMode(GameMode.SURVIVAL);
-
-                removeFromGroup(p);
-
-                p.sendMessage(ChatColor.YELLOW + "You have exited the ADMIN MODE! To enable it again type /admin");
+                p.sendMessage(Objects.requireNonNull(config.getString("adminConfig.messages.adminModeDisabled")));
                 return true;
 
             } else {
 
-                p.sendMessage(ChatColor.RED + "You need to have an access to this command!");
+                p.sendMessage(Objects.requireNonNull(config.getString("adminConfig.messages.noAccess")));
 
                 return true;
             }
@@ -146,7 +211,7 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean isInGroup(OfflinePlayer player) {
+    private boolean isInGroup(OfflinePlayer player, Group g) {
         String playerName = player.getName();
         if (playerName == null) {
             return false;
@@ -156,50 +221,48 @@ public class AdminCommand implements CommandExecutor {
             return false;
         }
 
-        InheritanceNode inheritanceNode = InheritanceNode.builder("adminModeAccess").build();
+        InheritanceNode inheritanceNode = InheritanceNode.builder(g).build();
 
         return user.data().contains(inheritanceNode, NodeEqualityPredicate.EXACT).asBoolean();
     }
 
-    private boolean addToGroup(OfflinePlayer player) {
-        Group newGroup = luckPerms.getGroupManager().getGroup("adminModePrefix");
+    private void addToGroup(OfflinePlayer player, Group g) {
+        Group newGroup = luckPerms.getGroupManager().getGroup(g.getName());
         if (newGroup == null) {
-            return false;
+            return;
         }
 
         String playerName = player.getName();
         if (playerName == null) {
-            return false;
+            return;
         }
         User user = luckPerms.getUserManager().getUser(playerName);
         if (user == null) {
-            return false;
+            return;
         }
 
-        InheritanceNode node = InheritanceNode.builder("adminModePrefix").build();
+        InheritanceNode node = InheritanceNode.builder(g).build();
         DataMutateResult result = user.data().add(node);
         if (result == DataMutateResult.FAIL) {
-            return false;
+            return;
         }
 
         luckPerms.getUserManager().saveUser(user);
-        return true;
     }
 
-    private boolean removeFromGroup(OfflinePlayer player) {
+    private void removeFromGroup(OfflinePlayer player, Group g) {
         String playerName = player.getName();
         if (playerName == null) {
-            return false;
+            return;
         }
         User user = luckPerms.getUserManager().getUser(playerName);
         if (user == null) {
-            return false;
+            return;
         }
 
-        InheritanceNode groupNode = InheritanceNode.builder("adminModePrefix").build();
-        boolean result = user.data().remove(groupNode) != DataMutateResult.FAIL;
+        InheritanceNode node = InheritanceNode.builder(g).build();
+        boolean result = user.data().remove(node) != DataMutateResult.FAIL;
 
         luckPerms.getUserManager().saveUser(user);
-        return result;
     }
 }

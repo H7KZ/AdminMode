@@ -1,0 +1,60 @@
+#ADMIN MODE PLUGIN CONFIG
+#------------------------
+"adminConfig":
+
+  # Name of the command, by default it is /admin
+  "commands":
+    "nameOfTheMainCommand": "admin"
+  # -------------------------------
+
+  # Configuration of LuckPerms groups & prefix
+  "luckPerms":
+    "groups":
+      "accessGroupName": "adminModeAccess"
+      "prefixGroupName": "adminModePrefix"
+      "prefixOfTheGroup": "§c§l[ADMIN] §r"
+      "priorityOfTheGroup": 150
+  # -------------------------------
+
+  # Everything you wish to save before going /admin
+  "saving":
+    "saveInv": true
+    "saveArmor": true
+    "saveExp": true
+    "saveLocation": true
+  # -------------------------------
+
+  # Everything you want to erase when going /admin
+  # Of course the saved items will be saved, just that you will still have the items you had before going to the /admin
+  # I recommend leaving this by default!
+  "erasingEnter":
+    "playerInv": true
+    "playerArmor": true
+    "playerExp": true
+  # -------------------------------
+
+  # Everything you want to erase when returning from /admin
+  # Be aware that items you have might be replaced by saved items! I recommend leaving this by default!
+  "erasingReturn":
+    "playerInv": true
+    "playerArmor": true
+  # -------------------------------
+
+  # Specify if user should get Operator or not when entering /admin & returning from /admin
+  "operator":
+    "operatorEnter": true
+    "operatorReturn": false
+  # -------------------------------
+
+  # Specifying what GameMode will be used after player returns from Admin Mode
+  # SURVIVAL = 0; CREATIVE = 1; ADVENTURE = 2 SPECTATOR = 3
+  "gameModes":
+    "gameModeEnter": 1
+    "gameModeReturn": 0
+  # -------------------------------
+
+  # Message which pop up when player does not have access, or you entered / leave the Admin Mode
+  "messages":
+    "noAccess": "§cYou need to have an access to this command!"
+    "adminModeEnabled": "§aYou are in ADMIN MODE! To Exit type /admin"
+    "adminModeDisabled": "§eYou have exited the ADMIN MODE! To enable it again type /admin"

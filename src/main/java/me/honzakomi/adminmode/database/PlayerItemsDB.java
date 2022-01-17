@@ -40,8 +40,4 @@ public class PlayerItemsDB {
             System.out.println(e.getMessage());
         }
     }
-
-    public static void reload() {
-        customFile = YamlConfiguration.loadConfiguration(file);
-    }
 }
