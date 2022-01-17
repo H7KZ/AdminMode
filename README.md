@@ -8,5 +8,5 @@
 
 ### Change anything in the config
 1. Change the things you want.
-2. Reload the Plugin Once.
-3. Done! If not try to reload it Twice when It is not working then message me.
+2. Reload the Plugin Once using console line.
+3. Done! If not, try to reload it Twice, when that is not working - message me.
