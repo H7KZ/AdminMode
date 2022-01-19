@@ -1,4 +1,6 @@
 # AdminRole
+
+## !!! TO RUN THIS PLUGIN YOU NEED TO ADD LUCKPERMS, & CHAT (I recommend EssentialsX, EssentialsX Chat, Vault) PLUGINS !!!
  
 ### How to change Prefix
 1. Change the name in the config file.
