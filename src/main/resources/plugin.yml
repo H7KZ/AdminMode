@@ -6,6 +6,6 @@ authors: [ HonzaKOMI ]
 description: you can go to admin mode and back
 website: https://kominekjan.cz
 commands:
-  admin:
+  AdminMode:
     usage: </command>
     description: makes you go admin mode
