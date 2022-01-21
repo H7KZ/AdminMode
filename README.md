@@ -1,12 +1,12 @@
 # AdminRole
 
-## !!! TO RUN THIS PLUGIN YOU NEED TO ADD LUCKPERMS, & CHAT (I recommend EssentialsX, EssentialsX Chat, Vault) PLUGINS !!!
+## !!! TO RUN THIS PLUGIN YOU NEED TO ADD LUCKPERMS & I recommend EssentialsX, EssentialsX Chat, Vault PLUGINS !!!
  
 ### How to change Prefix
-1. Change the name in the config file.
-2. In the server do /luckperms group adminModePrefix meta removePrefix 150 (or the value that is configured in the config file).
-3. Twice reload plugins LuckPerms & AdminMode using reload in console line.
-4. Done!
+Do not change the prefix in the plugin's config change it like so:
+1. By default do /luckperms group adminmodeprefix meta removeprefix 100
+2. Set new Prefix by /luckperms group adminmodeprefix meta setprefix {PrefixName} {priorityValue}
+3. Done!
 
 ### Change anything in the config
 1. Change the things you want.
