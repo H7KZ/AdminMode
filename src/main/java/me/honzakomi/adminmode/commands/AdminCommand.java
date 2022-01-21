@@ -36,7 +36,7 @@ public class AdminCommand implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (command.getName().equalsIgnoreCase(Objects.requireNonNull(config.getString("adminConfig.commands.nameOfTheMainCommand")))) {
+        if (command.getName().equalsIgnoreCase("AdminMode")) {
 
             Group groupAdminAccess = luckPerms.getGroupManager().getGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.accessGroupName")));
             if (groupAdminAccess == null) {
@@ -211,12 +211,12 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 
-    private boolean isInGroup(OfflinePlayer player, Group g) {
-        String playerName = player.getName();
-        if (playerName == null) {
+    private boolean isInGroup(OfflinePlayer p, Group g) {
+        String pN = p.getName();
+        if (pN == null) {
             return false;
         }
-        User user = luckPerms.getUserManager().getUser(playerName);
+        User user = luckPerms.getUserManager().getUser(pN);
         if (user == null) {
             return false;
         }
@@ -226,17 +226,17 @@ public class AdminCommand implements CommandExecutor {
         return user.data().contains(inheritanceNode, NodeEqualityPredicate.EXACT).asBoolean();
     }
 
-    private void addToGroup(OfflinePlayer player, Group g) {
-        Group newGroup = luckPerms.getGroupManager().getGroup(g.getName());
-        if (newGroup == null) {
+    private void addToGroup(OfflinePlayer p, Group g) {
+        Group nG = luckPerms.getGroupManager().getGroup(g.getName());
+        if (nG == null) {
             return;
         }
 
-        String playerName = player.getName();
-        if (playerName == null) {
+        String pN = p.getName();
+        if (pN == null) {
             return;
         }
-        User user = luckPerms.getUserManager().getUser(playerName);
+        User user = luckPerms.getUserManager().getUser(pN);
         if (user == null) {
             return;
         }
@@ -250,12 +250,12 @@ public class AdminCommand implements CommandExecutor {
         luckPerms.getUserManager().saveUser(user);
     }
 
-    private void removeFromGroup(OfflinePlayer player, Group g) {
-        String playerName = player.getName();
-        if (playerName == null) {
+    private void removeFromGroup(OfflinePlayer p, Group g) {
+        String pN = p.getName();
+        if (pN == null) {
             return;
         }
-        User user = luckPerms.getUserManager().getUser(playerName);
+        User user = luckPerms.getUserManager().getUser(pN);
         if (user == null) {
             return;
         }
