@@ -3,9 +3,9 @@ version: '${project.version}'
 main: me.honzakomi.adminmode.AdminMode
 api-version: 1.16
 authors: [ HonzaKOMI ]
-description: you can go to admin mode and back
+description: Allows you to switch between admin mode and normal mode
 website: https://kominekjan.cz
 commands:
   AdminMode:
     usage: </command>
-    description: makes you go admin mode
+    description: /adminmode <command> ('/adminmode help' for more info)

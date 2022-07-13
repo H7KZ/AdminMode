@@ -1,41 +1,31 @@
 package me.honzakomi.adminmode.commands.all;
 
 import me.honzakomi.adminmode.permissions.CheckPermission;
-import me.honzakomi.adminmode.variables.Variables;
 import org.bukkit.entity.Player;
 
 import static me.honzakomi.adminmode.AdminMode.plugin;
+import static me.honzakomi.adminmode.permissions.Permissions.disableCommandPermission;
+import static me.honzakomi.adminmode.permissions.Permissions.disablePlayerCommandPermission;
+import static me.honzakomi.adminmode.playerData.PlayerData.disableTarget;
+import static me.honzakomi.adminmode.playerData.PlayerData.disableYourself;
 
 public class DisableCommand {
     public static final String commandName = "disable";
 
     public static void command(Player p, String[] args) {
-        if (args.length >= 1) {
+        if (args.length >= 1 && CheckPermission.check(p, disablePlayerCommandPermission)) {
             command(p, args[1]);
             return;
         }
 
-        if (CheckPermission.check(p, Variables.Permissions.disableCommandPermission) || CheckPermission.check(p, Variables.Permissions.allPermissions)) {
+        if (CheckPermission.check(p, disableCommandPermission)) {
             disableYourself(p);
         }
-
-
     }
 
     public static void command(Player p, String t) {
-        if (CheckPermission.check(p, Variables.Permissions.disablePlayerCommandPermission) || CheckPermission.check(p, Variables.Permissions.allPermissions)) {
-            Player target = plugin.getServer().getPlayerExact(t);
-            disablePlayer(target);
-        }
+        Player target = plugin.getServer().getPlayerExact(t);
 
-
-    }
-
-    private static void disableYourself(Player p) {
-
-    }
-
-    private static void disablePlayer(Player t) {
-
+        disableTarget(p, target);
     }
 }

@@ -109,11 +109,24 @@
 # **           ADMIN MODE MESSAGE SETTINGS            **
 # ****----------------------------------------------****
 "messages":
-  "noPermission": "§cAdminMode: You don't have permission to use this command!"
+  "noPermissionPlayer": "§cAdminMode: You don't have permission to use this command!"
+
+  "noPermissionSender": "AdminMode: You don't have permission to use this command!"
+
   "notAPlayer": "§cAdminMode: You need to be a player to use this command!"
+
   "unknownCommand": "§cAdminMode: Unknown command!"
+
+  "specifyCommand": "AdminMode: You need to specify a command!"
+
   "noSpecifiedPlayer": "§cAdminMode: You need to specify the name of the player!"
-  "playerIsNotOnline": "§cAdminMode: Player is not online!"
-  "playerIsNotAdminMode": "§cAdminMode: Player is not in admin mode!"
-  "playerIsInAdminMode": "§eAdminMode: Player is currently in admin mode!"
+
+  "targetIsNotOnline": "§cAdminMode: Player is not online!"
+
+  "targetIsNotAdminMode": "§cAdminMode: Player is not in admin mode!"
+
+  "targetIsInAdminMode": "§eAdminMode: Player is currently in admin mode!"
+
+  "playerIsInAdminMode": "§cAdminMode: You are currently in admin mode!"
+
   "reloaded": "§aAdminMode: Plugin reloaded!"

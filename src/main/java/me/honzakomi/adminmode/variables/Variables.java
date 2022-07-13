@@ -35,7 +35,7 @@ public class Variables {
         LeaveAdminMode.ChangeTo.op = config.getBoolean("leaveAdminMode.changeTo.op");
     }
 
-    public static class EnterAdminMode {
+    static class EnterAdminMode {
         public static class Save {
             public static Boolean all;
             public static Boolean inv;
@@ -59,7 +59,7 @@ public class Variables {
         }
     }
 
-    public static class LeaveAdminMode {
+    static class LeaveAdminMode {
         public static class Erase {
             public static Boolean all;
             public static Boolean inv;
@@ -76,17 +76,5 @@ public class Variables {
 
     public static class Commands {
         public static String[] commandNameList = {"help", "enable", "disable", "enable <player name>", "disable <player name>", "check", "reload"};
-    }
-
-    public static class Permissions {
-        public static final String allPermissions = "adminmode.permissions.all";
-        public static final String adminModeCommandPermission = "adminmode.command.adminmode";
-        public static final String helpCommandPermission = "adminmode.command.help";
-        public static final String enableCommandPermission = "adminmode.command.enable";
-        public static final String disableCommandPermission = "adminmode.command.check";
-        public static final String checkCommandPermission = "adminmode.command.isenabled";
-        public static final String disablePlayerCommandPermission = "adminmode.command.disable.player";
-        public static final String enablePlayerCommandPermission = "adminmode.command.enable.player";
-        public static final String reloadCommandPermission = "adminmode.command.reload";
     }
 }
