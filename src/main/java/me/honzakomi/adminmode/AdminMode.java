@@ -1,63 +1,47 @@
 package me.honzakomi.adminmode;
 
-import me.honzakomi.adminmode.commands.AdminCommand;
-import me.honzakomi.adminmode.database.PlayerItemsDB;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.node.types.PrefixNode;
+import me.honzakomi.adminmode.bstats.Metrics;
+import me.honzakomi.adminmode.database.PlayersDatabase;
+import me.honzakomi.adminmode.initialize.Initialize;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Objects;
+import java.util.logging.Logger;
 
 public final class AdminMode extends JavaPlugin {
 
     public static AdminMode plugin;
-
-    public static LuckPerms luckPerms;
-
+    public static Logger logger;
     public static FileConfiguration config;
 
     @Override
     public void onEnable() {
         plugin = this;
 
-        config = this.getConfig();
+        logger = plugin.getLogger();
 
+        new Metrics(this, 15751);
+
+        //CONFIG FILE LOAD & COPY DEFAULTS
+        config = plugin.getConfig();
         config.options().copyDefaults(true);
-        saveConfig();
+        saveDefaultConfig();
 
-        luckPerms = LuckPermsProvider.get();
+        Initialize.variables();
 
-        luckPerms.getGroupManager().createAndLoadGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.accessGroupName")));
-        luckPerms.getGroupManager().createAndLoadGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.prefixGroupName")));
+        Initialize.messages();
 
-        Group adminPrefix = luckPerms.getGroupManager().getGroup(Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.prefixGroupName")));
-        assert adminPrefix != null;
+        Initialize.database();
 
-        if (!config.getBoolean("adminConfig.loaded")) {
-            PrefixNode adminPrefixName = PrefixNode.builder("§c§l[ADMIN] ", 100).build();
-            adminPrefix.data().add(adminPrefixName);
-            luckPerms.getGroupManager().saveGroup(adminPrefix);
-            config.set("adminConfig.loaded", true);
-            saveConfig();
-        }
+        Initialize.commands();
 
-        System.out.println("[AdminMode] LuckPerms groups " + Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.accessGroupName")) + " & " + Objects.requireNonNull(config.getString("adminConfig.luckPerms.groups.prefixGroupName")) + " were successfully created!");
-
-        Objects.requireNonNull(getCommand("AdminMode")).setExecutor(new AdminCommand());
-
-        PlayerItemsDB.setup();
-        PlayerItemsDB.save();
-
-        System.out.println("[AdminMode] Admin Mode has been successfully loaded!");
+        logger.info("AdminMode Plugin has started with no signs of errors!");
     }
 
     @Override
     public void onDisable() {
-        PlayerItemsDB.save();
+        PlayersDatabase.save();
 
-        System.out.println("ADMIN MODE PLUGIN IS SHUTTING DOWN!");
+        logger.info("AdminMode Plugin has been successfully shut down!");
     }
 }

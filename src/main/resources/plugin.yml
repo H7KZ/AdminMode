@@ -1,7 +1,7 @@
 name: AdminMode
 version: '${project.version}'
 main: me.honzakomi.adminmode.AdminMode
-api-version: 1.18
+api-version: 1.16
 authors: [ HonzaKOMI ]
 description: you can go to admin mode and back
 website: https://kominekjan.cz

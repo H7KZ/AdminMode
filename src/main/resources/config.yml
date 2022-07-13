@@ -1,61 +1,119 @@
-#ADMIN MODE PLUGIN CONFIG
-#------------------------
-"adminConfig":
-  # DO NOT CHANGE THIS VALUE AT ANY MOMENT! DO NOT!
-  "loaded": false
-  # DO NOT CHANGE THIS VALUE AT ANY MOMENT! DO NOT!
+#
+#
+#
+#   --------------------------------------------------------------
+#   |                     AdminMode Plugin                       |
+#   |   copyright (c) 2022 by Jan Komínek. All rights reserved.  |
+#   |      More about a license on my github. Username: H7KZ     |
+#   --------------------------------------------------------------
+#
+#
+#
 
-  # Name of the command - you can use lowercase letter of course no need to write big A & M
-  #   /AdminMode
-  # -------------------------------
+# ****----------------------------------------------****
+# **              ADMINMODE PERMISSIONS               **
+# ****----------------------------------------------****
+# ALL PERMISSIONS
+# [adminmode.permissions.all]
+# -----
+# COMMAND ADMINMODE PERMISSION (use the /'adminmode')
+# [adminmode.command.adminmode]
+# -----
+# COMMAND HELP PERMISSION ('/adminmode help')
+# [adminmode.command.help]
+# -----
+# COMMAND DISABLE PERMISSION (disable the admin mode to yourself '/adminmode disable')
+# [adminmode.command.disable]
+# -----
+# COMMAND ENABLE PERMISSION (enable the admin mode to yourself '/adminmode disable')
+# [adminmode.command.enable]
+# -----
+# COMMAND DISABLE PLAYER PERMISSION (disable the admin mode to a player '/adminmode disable <name>')
+# [adminmode.command.disable.player]
+# -----
+# COMMAND ENABLE PLAYER PERMISSION (enable the admin mode to a player '/adminmode disable <name>')
+# [adminmode.command.enable.player]
+# -----
+# COMMAND CHECK PERMISSION (check if player is in admin mode '/adminmode check <name>')
+# [adminmode.command.check]
+# -----
 
-  # Configuration of LuckPerms groups & prefix
-  "luckPerms":
-    "groups":
-      "accessGroupName": "adminModeAccess"
-      "prefixGroupName": "adminModePrefix"
-      # Default value of the prefix is §c§l[ADMIN] and priority 100
-  # -------------------------------
 
-  # Everything you wish to save before going /admin
-  "saving":
-    "saveInv": true
-    "saveArmor": true
-    "saveExp": true
-    "saveLocation": true
-  # -------------------------------
+# ****----------------------------------------------****
+# **             ADMIN MODE ENTER SETTINGS            **
+# ****----------------------------------------------****
+"enterAdminMode":
+  # What to save when you enter the admin mode
+  "save":
+    # save all player data
+    "all": true
+    # save inventory
+    "inv": true
+    # save armor
+    "armor": true
+    # save experience level
+    "exp": true
+    # save health
+    "health": true
+    # save last location
+    # by default value is true, meaning you will spawn where you are standing when leaving the admin mode
+    "location": true
 
-  # Everything you want to erase when going /admin
-  # Of course the saved items will be saved, just that you will still have the items you had before going to the /admin
-  # I recommend leaving this by default!
-  "erasingEnter":
-    "playerInv": true
-    "playerArmor": true
-    "playerExp": true
-  # -------------------------------
+  # What not to keep when you enter the admin mode
+  "erase":
+    # erase all player data
+    "all": true
+    # erase inventory
+    "inv": true
+    # erase armor
+    "armor": true
+    # erase experience level
+    "exp": true
+    # erase health
+    "health": true
 
-  # Everything you want to erase when returning from /admin
-  # Be aware that items you have might be replaced by saved items! I recommend leaving this by default!
-  "erasingReturn":
-    "playerInv": true
-    "playerArmor": true
-  # -------------------------------
+  # To what change when you enter the admin mode
+  "changeTo":
+    # change to gamemode
+    "gamemode": 1
+    # give op
+    "op": true
 
-  # Specify if user should get Operator or not when entering /admin & returning from /admin
-  "operator":
-    "operatorEnter": true
-    "operatorReturn": false
-  # -------------------------------
 
-  # Specifying what GameMode will be used after player returns from Admin Mode
-  # SURVIVAL = 0; CREATIVE = 1; ADVENTURE = 2 SPECTATOR = 3
-  "gameModes":
-    "gameModeEnter": 1
-    "gameModeReturn": 0
-  # -------------------------------
+# ****----------------------------------------------****
+# **             ADMIN MODE LEAVE SETTINGS            **
+# ****----------------------------------------------****
+"leaveAdminMode":
+  # What to erase when you leave the admin mode
+  "erase":
+    # erase all player data
+    "all": true
+    # erase inventory
+    "inv": true
+    # erase armor
+    "armor": true
+    # erase experience level
+    "exp": true
+    # erase health
+    "health": true
 
-  # Message which pop up when player does not have access, or you entered / leave the Admin Mode
-  "messages":
-    "noAccess": "§cYou need to have an access to this command!"
-    "adminModeEnabled": "§aYou are in ADMIN MODE! To Exit type /admin"
-    "adminModeDisabled": "§eYou have exited the ADMIN MODE! To enable it again type /admin"
+  # To what change when you leave the admin mode
+  "changeTo":
+    # change to gamemode
+    "gamemode": 0
+    # keep op
+    "op": false
+
+
+# ****----------------------------------------------****
+# **           ADMIN MODE MESSAGE SETTINGS            **
+# ****----------------------------------------------****
+"messages":
+  "noPermission": "§cAdminMode: You don't have permission to use this command!"
+  "notAPlayer": "§cAdminMode: You need to be a player to use this command!"
+  "unknownCommand": "§cAdminMode: Unknown command!"
+  "noSpecifiedPlayer": "§cAdminMode: You need to specify the name of the player!"
+  "playerIsNotOnline": "§cAdminMode: Player is not online!"
+  "playerIsNotAdminMode": "§cAdminMode: Player is not in admin mode!"
+  "playerIsInAdminMode": "§eAdminMode: Player is currently in admin mode!"
+  "reloaded": "§aAdminMode: Plugin reloaded!"

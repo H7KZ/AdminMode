@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AdminRole" target="1.8" />
+      <module name="AdminRole" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>
