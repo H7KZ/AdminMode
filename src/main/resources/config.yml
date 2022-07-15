@@ -55,6 +55,8 @@
     "exp": true
     # save health
     "health": true
+    # save hunger
+    "food": true
     # save last location
     # by default value is true, meaning you will spawn where you are standing when leaving the admin mode
     "location": true
@@ -71,11 +73,13 @@
     "exp": true
     # erase health
     "health": true
+    # erase hunger
+    "food": true
 
   # To what change when you enter the admin mode
   "changeTo":
     # change to gamemode
-    "gamemode": 1
+    "gamemode": "CREATIVE"
     # give op
     "op": true
 
@@ -96,11 +100,13 @@
     "exp": true
     # erase health
     "health": true
+    # erase hunger
+    "food": true
 
   # To what change when you leave the admin mode
   "changeTo":
     # change to gamemode
-    "gamemode": 0
+    "gamemode": "SURVIVAL"
     # keep op
     "op": false
 
@@ -128,5 +134,7 @@
   "targetIsInAdminMode": "§eAdminMode: Player is currently in admin mode!"
 
   "playerIsInAdminMode": "§cAdminMode: You are currently in admin mode!"
+
+  "playerIsNotInAdminMode": "§cAdminMode: You are not in admin mode!"
 
   "reloaded": "§aAdminMode: Plugin reloaded!"

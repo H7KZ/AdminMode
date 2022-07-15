@@ -11,6 +11,7 @@ public class PlayerMessage {
     public static String targetIsNotAdmin;
     public static String targetIsAdmin;
     public static String playerIsAdmin;
+    public static String playerIsNotAdmin;
     public static String pluginReloaded;
 
     public static void init() {
@@ -22,13 +23,15 @@ public class PlayerMessage {
 
         specifyPlayer = config.getString("messages.noSpecifiedPlayer");
 
-        targetIsNotOnline = config.getString("messages.playerIsNotOnline");
+        targetIsNotOnline = config.getString("messages.targetIsNotOnline");
 
-        targetIsNotAdmin = config.getString("messages.playerIsNotAdminMode");
+        targetIsNotAdmin = config.getString("messages.targetIsNotAdminMode");
 
-        targetIsAdmin = config.getString("messages.playerIsInAdminMode");
+        targetIsAdmin = config.getString("messages.targetIsInAdminMode");
 
         playerIsAdmin = config.getString("messages.playerIsInAdminMode");
+
+        playerIsNotAdmin = config.getString("messages.playerIsNotInAdminMode");
 
         pluginReloaded = config.getString("messages.reloaded");
     }

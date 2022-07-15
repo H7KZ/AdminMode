@@ -10,6 +10,7 @@ public class Variables {
         EnterAdminMode.Save.armor = config.getBoolean("enterAdminMode.save.armor");
         EnterAdminMode.Save.exp = config.getBoolean("enterAdminMode.save.exp");
         EnterAdminMode.Save.health = config.getBoolean("enterAdminMode.save.health");
+        EnterAdminMode.Save.food = config.getBoolean("enterAdminMode.save.food");
         EnterAdminMode.Save.location = config.getBoolean("enterAdminMode.save.location");
 
         // ENTER ERASE
@@ -18,9 +19,10 @@ public class Variables {
         EnterAdminMode.Erase.armor = config.getBoolean("enterAdminMode.erase.armor");
         EnterAdminMode.Erase.exp = config.getBoolean("enterAdminMode.erase.exp");
         EnterAdminMode.Erase.health = config.getBoolean("enterAdminMode.erase.health");
+        EnterAdminMode.Erase.food = config.getBoolean("enterAdminMode.erase.food");
 
         // ENTER CHANGE TO
-        EnterAdminMode.ChangeTo.gamemode = config.getInt("enterAdminMode.changeTo.gamemode");
+        EnterAdminMode.ChangeTo.gamemode = config.getString("enterAdminMode.changeTo.gamemode");
         EnterAdminMode.ChangeTo.op = config.getBoolean("enterAdminMode.changeTo.op");
 
         // LEAVE ERASE
@@ -29,19 +31,21 @@ public class Variables {
         LeaveAdminMode.Erase.armor = config.getBoolean("leaveAdminMode.erase.armor");
         LeaveAdminMode.Erase.exp = config.getBoolean("leaveAdminMode.erase.exp");
         LeaveAdminMode.Erase.health = config.getBoolean("leaveAdminMode.erase.health");
+        LeaveAdminMode.Erase.food = config.getBoolean("leaveAdminMode.erase.food");
 
         // LEAVE CHANGE TO
-        LeaveAdminMode.ChangeTo.gamemode = config.getInt("leaveAdminMode.changeTo.gamemode");
+        LeaveAdminMode.ChangeTo.gamemode = config.getString("leaveAdminMode.changeTo.gamemode");
         LeaveAdminMode.ChangeTo.op = config.getBoolean("leaveAdminMode.changeTo.op");
     }
 
-    static class EnterAdminMode {
+    public static class EnterAdminMode {
         public static class Save {
             public static Boolean all;
             public static Boolean inv;
             public static Boolean armor;
             public static Boolean exp;
             public static Boolean health;
+            public static Boolean food;
             public static Boolean location;
         }
 
@@ -51,25 +55,27 @@ public class Variables {
             public static Boolean armor;
             public static Boolean exp;
             public static Boolean health;
+            public static Boolean food;
         }
 
         public static class ChangeTo {
-            public static int gamemode;
+            public static String gamemode;
             public static Boolean op;
         }
     }
 
-    static class LeaveAdminMode {
+    public static class LeaveAdminMode {
         public static class Erase {
             public static Boolean all;
             public static Boolean inv;
             public static Boolean armor;
             public static Boolean exp;
             public static Boolean health;
+            public static Boolean food;
         }
 
         public static class ChangeTo {
-            public static int gamemode;
+            public static String gamemode;
             public static Boolean op;
         }
     }
