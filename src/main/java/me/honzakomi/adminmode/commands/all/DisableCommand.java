@@ -8,7 +8,8 @@ import org.bukkit.entity.Player;
 import static me.honzakomi.adminmode.AdminMode.plugin;
 import static me.honzakomi.adminmode.permissions.Permissions.disableCommandPermission;
 import static me.honzakomi.adminmode.permissions.Permissions.disablePlayerCommandPermission;
-import static me.honzakomi.adminmode.playerData.PlayerData.*;
+import static me.honzakomi.adminmode.playerData.PlayerData.disableTarget;
+import static me.honzakomi.adminmode.playerData.PlayerData.disableYourself;
 
 public class DisableCommand {
     public static final String commandName = "disable";
@@ -19,13 +20,25 @@ public class DisableCommand {
             return;
         }
 
-        if (CheckPermission.check(p, disableCommandPermission)) {
-            if (!PlayersDatabase.get().contains(p.getUniqueId().toString())) {
-                p.sendMessage(PlayerMessage.playerIsNotAdmin);
+        if (args.length == 1) {
+            if (PlayersDatabase.get().getBoolean(p.getUniqueId() + ".canDisableHimself")) {
+                if (!PlayersDatabase.get().contains(p.getUniqueId().toString())) {
+                    p.sendMessage(PlayerMessage.isNotInAdminMode);
+                    return;
+                }
+
+                disableYourself(p);
                 return;
             }
 
-            disableYourself(p);
+            if (CheckPermission.check(p, disableCommandPermission)) {
+                if (!PlayersDatabase.get().contains(p.getUniqueId().toString())) {
+                    p.sendMessage(PlayerMessage.isNotInAdminMode);
+                    return;
+                }
+
+                disableYourself(p);
+            }
         }
     }
 
@@ -34,7 +47,7 @@ public class DisableCommand {
 
         assert target != null;
         if (!PlayersDatabase.get().contains(target.getUniqueId().toString())) {
-            p.sendMessage(PlayerMessage.targetIsNotAdmin);
+            p.sendMessage(PlayerMessage.targetIsNotAdminMode);
             return;
         }
 

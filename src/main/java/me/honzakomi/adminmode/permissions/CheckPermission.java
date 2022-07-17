@@ -23,7 +23,11 @@ public class CheckPermission {
             return true;
         }
 
-        s.sendMessage(SenderMessage.noPermission);
+        if (s instanceof Player) {
+            s.sendMessage(PlayerMessage.noPermission);
+        } else {
+            s.sendMessage(SenderMessage.noPermission);
+        }
 
         return false;
     }

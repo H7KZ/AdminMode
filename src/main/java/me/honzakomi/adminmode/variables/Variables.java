@@ -12,6 +12,8 @@ public class Variables {
         EnterAdminMode.Save.health = config.getBoolean("enterAdminMode.save.health");
         EnterAdminMode.Save.food = config.getBoolean("enterAdminMode.save.food");
         EnterAdminMode.Save.location = config.getBoolean("enterAdminMode.save.location");
+        EnterAdminMode.Save.gamemode = config.getBoolean("enterAdminMode.save.gamemode");
+        EnterAdminMode.Save.op = config.getBoolean("enterAdminMode.save.op");
 
         // ENTER ERASE
         EnterAdminMode.Erase.all = config.getBoolean("enterAdminMode.erase.all");
@@ -22,8 +24,10 @@ public class Variables {
         EnterAdminMode.Erase.food = config.getBoolean("enterAdminMode.erase.food");
 
         // ENTER CHANGE TO
-        EnterAdminMode.ChangeTo.gamemode = config.getString("enterAdminMode.changeTo.gamemode");
-        EnterAdminMode.ChangeTo.op = config.getBoolean("enterAdminMode.changeTo.op");
+        EnterAdminMode.ChangeTo.player.gamemode = config.getString("enterAdminMode.changeTo.player.gamemode");
+        EnterAdminMode.ChangeTo.player.op = config.getBoolean("enterAdminMode.changeTo.player.op");
+        EnterAdminMode.ChangeTo.target.gamemode = config.getString("enterAdminMode.changeTo.target.gamemode");
+        EnterAdminMode.ChangeTo.target.op = config.getBoolean("enterAdminMode.changeTo.target.op");
 
         // LEAVE ERASE
         LeaveAdminMode.Erase.all = config.getBoolean("leaveAdminMode.erase.all");
@@ -33,9 +37,16 @@ public class Variables {
         LeaveAdminMode.Erase.health = config.getBoolean("leaveAdminMode.erase.health");
         LeaveAdminMode.Erase.food = config.getBoolean("leaveAdminMode.erase.food");
 
-        // LEAVE CHANGE TO
-        LeaveAdminMode.ChangeTo.gamemode = config.getString("leaveAdminMode.changeTo.gamemode");
-        LeaveAdminMode.ChangeTo.op = config.getBoolean("leaveAdminMode.changeTo.op");
+        // LEAVE CHANGE TO PLAYER
+        LeaveAdminMode.ChangeTo.player.savedGamemode = config.getBoolean("leaveAdminMode.changeTo.player.savedGamemode");
+        LeaveAdminMode.ChangeTo.player.gamemode = config.getString("leaveAdminMode.changeTo.player.gamemode");
+        LeaveAdminMode.ChangeTo.player.savedOp = config.getBoolean("leaveAdminMode.changeTo.player.savedOp");
+        LeaveAdminMode.ChangeTo.player.op = config.getBoolean("leaveAdminMode.changeTo.player.op");
+        // LEAVE CHANGE TO TARGET
+        LeaveAdminMode.ChangeTo.target.savedGamemode = config.getBoolean("leaveAdminMode.changeTo.target.savedGamemode");
+        LeaveAdminMode.ChangeTo.target.gamemode = config.getString("leaveAdminMode.changeTo.target.gamemode");
+        LeaveAdminMode.ChangeTo.target.savedOp = config.getBoolean("leaveAdminMode.changeTo.target.savedOp");
+        LeaveAdminMode.ChangeTo.target.op = config.getBoolean("leaveAdminMode.changeTo.target.op");
     }
 
     public static class EnterAdminMode {
@@ -47,6 +58,8 @@ public class Variables {
             public static Boolean health;
             public static Boolean food;
             public static Boolean location;
+            public static Boolean gamemode;
+            public static Boolean op;
         }
 
         public static class Erase {
@@ -59,8 +72,15 @@ public class Variables {
         }
 
         public static class ChangeTo {
-            public static String gamemode;
-            public static Boolean op;
+            public static class player {
+                public static String gamemode;
+                public static Boolean op;
+            }
+
+            public static class target {
+                public static String gamemode;
+                public static Boolean op;
+            }
         }
     }
 
@@ -75,12 +95,23 @@ public class Variables {
         }
 
         public static class ChangeTo {
-            public static String gamemode;
-            public static Boolean op;
+            public static class player {
+                public static Boolean savedGamemode;
+                public static String gamemode;
+                public static Boolean savedOp;
+                public static Boolean op;
+            }
+
+            public static class target {
+                public static Boolean savedGamemode;
+                public static String gamemode;
+                public static Boolean savedOp;
+                public static Boolean op;
+            }
         }
     }
 
     public static class Commands {
-        public static String[] commandNameList = {"help", "enable", "disable", "enable <player name>", "disable <player name>", "check", "reload"};
+        public static final String[] commandNameList = {"help", "enable", "disable", "check"};
     }
 }

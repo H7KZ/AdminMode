@@ -3,36 +3,48 @@ package me.honzakomi.adminmode.messages;
 import static me.honzakomi.adminmode.AdminMode.config;
 
 public class PlayerMessage {
-    public static String needToBeAPlayer;
+    public static String pluginReloading;
+    public static String pluginReloaded;
     public static String noPermission;
     public static String unknownCommand;
     public static String specifyPlayer;
+    public static String enabled;
+    public static String disabled;
+    public static String targetEnabled;
+    public static String targetDisabled;
     public static String targetIsNotOnline;
-    public static String targetIsNotAdmin;
-    public static String targetIsAdmin;
-    public static String playerIsAdmin;
-    public static String playerIsNotAdmin;
-    public static String pluginReloaded;
+    public static String targetIsNotAdminMode;
+    public static String targetIsInAdminMode;
+    public static String isInAdminMode;
+    public static String isNotInAdminMode;
 
     public static void init() {
-        noPermission = config.getString("messages.noPermissionPlayer");
+        pluginReloading = config.getString("messages.player.pluginReloading");
 
-        needToBeAPlayer = config.getString("messages.notAPlayer");
+        pluginReloaded = config.getString("messages.player.pluginReloaded");
 
-        unknownCommand = config.getString("messages.unknownCommand");
+        noPermission = config.getString("messages.player.noPermission");
 
-        specifyPlayer = config.getString("messages.noSpecifiedPlayer");
+        unknownCommand = config.getString("messages.player.unknownCommand");
 
-        targetIsNotOnline = config.getString("messages.targetIsNotOnline");
+        specifyPlayer = config.getString("messages.player.specifyCommand");
 
-        targetIsNotAdmin = config.getString("messages.targetIsNotAdminMode");
+        enabled = config.getString("messages.player.enabled");
 
-        targetIsAdmin = config.getString("messages.targetIsInAdminMode");
+        disabled = config.getString("messages.player.disabled");
 
-        playerIsAdmin = config.getString("messages.playerIsInAdminMode");
+        targetEnabled = config.getString("messages.player.targetEnabled");
 
-        playerIsNotAdmin = config.getString("messages.playerIsNotInAdminMode");
+        targetDisabled = config.getString("messages.player.targetDisabled");
 
-        pluginReloaded = config.getString("messages.reloaded");
+        targetIsNotOnline = config.getString("messages.player.targetIsNotOnline");
+
+        targetIsNotAdminMode = config.getString("messages.player.targetIsNotAdminMode");
+
+        targetIsInAdminMode = config.getString("messages.player.targetIsInAdminMode");
+
+        isInAdminMode = config.getString("messages.player.isInAdminMode");
+
+        isNotInAdminMode = config.getString("messages.player.isNotInAdminMode");
     }
 }

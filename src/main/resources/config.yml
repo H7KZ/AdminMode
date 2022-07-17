@@ -60,6 +60,13 @@
     # save last location
     # by default value is true, meaning you will spawn where you are standing when leaving the admin mode
     "location": true
+    # save last gamemode
+    "gamemode": true
+    # save op
+    "op": true
+    # can disable himself from the admin mode, by default value is true
+    # (if it is false then the player can't disable himself if he does not have the disabled permission)
+    "canDisableHimself": true
 
   # What not to keep when you enter the admin mode
   "erase":
@@ -78,10 +85,16 @@
 
   # To what change when you enter the admin mode
   "changeTo":
-    # change to gamemode
-    "gamemode": "CREATIVE"
-    # give op
-    "op": true
+    "player":
+      # change to gamemode
+      "gamemode": "CREATIVE"
+      # give op
+      "op": true
+    "target":
+      # change to gamemode
+      "gamemode": "CREATIVE"
+      # give op
+      "op": false
 
 
 # ****----------------------------------------------****
@@ -105,36 +118,53 @@
 
   # To what change when you leave the admin mode
   "changeTo":
-    # change to gamemode
-    "gamemode": "SURVIVAL"
-    # keep op
-    "op": false
+    "player":
+      # change to saved gamemode
+      "savedGamemode": true
+      # change to default gamemode if saved gamemode is false
+      "gamemode": "SURVIVAL"
+      # change to saved op status
+      "savedOp": true
+      # load default op if saved op is false
+      "op": true
+    "target":
+      # change to saved gamemode
+      "savedGamemode": true
+      # change to default gamemode if saved gamemode is false
+      "gamemode": "SURVIVAL"
+      # change to saved op status
+      "savedOp": true
+      # load default op if saved op is false
+      "op": false
 
 
 # ****----------------------------------------------****
 # **           ADMIN MODE MESSAGE SETTINGS            **
 # ****----------------------------------------------****
 "messages":
-  "noPermissionPlayer": "§cAdminMode: You don't have permission to use this command!"
+  "sender":
+    "noPermission": "AdminMode: You don't have permission to use this command!"
+    "notAPlayer": "§cAdminMode: You need to be a player to use this command!"
+    "specifyCommand": "AdminMode: You need to specify a command!"
+  "player":
+    "pluginReloading": "§eAdminMode: Reloading..."
+    "pluginReloaded": "§aAdminMode: Plugin reloaded!"
 
-  "noPermissionSender": "AdminMode: You don't have permission to use this command!"
+    "noPermission": "§cAdminMode: You don't have permission to use this command!"
+    "unknownCommand": "§cAdminMode: Unknown command!"
+    "specifyCommand": "§cAdminMode: You need to specify a command!"
 
-  "notAPlayer": "§cAdminMode: You need to be a player to use this command!"
+    "enabled": "§aAdminMode: You have entered the admin mode!"
+    "disabled": "§aAdminMode: You have left the admin mode!"
+    "targetEnabled": "§aAdminMode: Player has entered the admin mode!"
+    "targetDisabled": "§aAdminMode: Player has left the admin mode!"
 
-  "unknownCommand": "§cAdminMode: Unknown command!"
+    "targetIsNotOnline": "§cAdminMode: Player is not online!"
+    "targetIsNotAdminMode": "§cAdminMode: Player is not in admin mode!"
+    "targetIsInAdminMode": "§cAdminMode: Player is currently in admin mode!"
 
-  "specifyCommand": "AdminMode: You need to specify a command!"
-
-  "noSpecifiedPlayer": "§cAdminMode: You need to specify the name of the player!"
-
-  "targetIsNotOnline": "§cAdminMode: Player is not online!"
-
-  "targetIsNotAdminMode": "§cAdminMode: Player is not in admin mode!"
-
-  "targetIsInAdminMode": "§eAdminMode: Player is currently in admin mode!"
-
-  "playerIsInAdminMode": "§cAdminMode: You are currently in admin mode!"
-
-  "playerIsNotInAdminMode": "§cAdminMode: You are not in admin mode!"
-
-  "reloaded": "§aAdminMode: Plugin reloaded!"
+    "isInAdminMode": "§cAdminMode: You are currently in admin mode!"
+    "isNotInAdminMode": "§cAdminMode: You are not in admin mode!"
+  "target":
+    "enabled": "§aAdminMode: Some admin made you enter the admin mode!"
+    "disabled": "§cAdminMode: Some admin have disabled your admin mode!"

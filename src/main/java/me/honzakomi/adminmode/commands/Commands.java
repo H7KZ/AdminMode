@@ -1,6 +1,7 @@
 package me.honzakomi.adminmode.commands;
 
 import me.honzakomi.adminmode.commands.all.*;
+import me.honzakomi.adminmode.database.PlayersDatabase;
 import me.honzakomi.adminmode.messages.PlayerMessage;
 import me.honzakomi.adminmode.messages.SenderMessage;
 import me.honzakomi.adminmode.permissions.CheckPermission;
@@ -21,8 +22,16 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        if (!CheckPermission.check(sender, adminModeCommandPermission)) {
-            return true;
+        if (sender instanceof Player p) {
+            if (!PlayersDatabase.get().getBoolean(p.getUniqueId() + ".canDisableHimself")) {
+                if (!CheckPermission.check(sender, adminModeCommandPermission)) {
+                    return true;
+                }
+            }
+        } else {
+            if (!CheckPermission.check(sender, adminModeCommandPermission)) {
+                return true;
+            }
         }
 
         if (args.length == 0) {
@@ -36,7 +45,7 @@ public class Commands implements CommandExecutor {
         }
 
         if (!(sender instanceof Player p)) {
-            sender.sendMessage(PlayerMessage.needToBeAPlayer);
+            sender.sendMessage(SenderMessage.notAPlayer);
             return true;
         }
 

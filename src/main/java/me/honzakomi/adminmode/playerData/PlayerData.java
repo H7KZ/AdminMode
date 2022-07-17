@@ -2,6 +2,7 @@ package me.honzakomi.adminmode.playerData;
 
 import me.honzakomi.adminmode.database.PlayersDatabase;
 import me.honzakomi.adminmode.messages.PlayerMessage;
+import me.honzakomi.adminmode.messages.TargetMessage;
 import me.honzakomi.adminmode.variables.Variables.EnterAdminMode;
 import me.honzakomi.adminmode.variables.Variables.LeaveAdminMode;
 import org.bukkit.GameMode;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+import static me.honzakomi.adminmode.AdminMode.config;
 import static me.honzakomi.adminmode.AdminMode.plugin;
 
 public class PlayerData {
@@ -22,19 +24,25 @@ public class PlayerData {
             return;
         }
 
-        //noinspection DuplicatedCode
         whatToSave(p);
 
-        whatToErase(p);
+        whatToEraseEnter(p);
 
-        Boolean giveOp = EnterAdminMode.ChangeTo.op;
-        String gameModeType = EnterAdminMode.ChangeTo.gamemode;
+        Boolean giveOp = EnterAdminMode.ChangeTo.player.op;
+        String gameModeType = EnterAdminMode.ChangeTo.player.gamemode;
 
         if (giveOp) {
             p.setOp(true);
         }
 
         p.setGameMode(GameMode.valueOf(gameModeType));
+
+        PlayersDatabase.get().set(p.getUniqueId() + ".canDisableHimself", config.getBoolean("enterAdminMode.save.canDisableHimself"));
+        PlayersDatabase.save();
+        PlayersDatabase.get().set(p.getUniqueId() + ".beenGivenByAdmin", false);
+        PlayersDatabase.save();
+
+        p.sendMessage(PlayerMessage.enabled);
     }
 
     public static void enableTarget(Player p, Player t) {
@@ -42,51 +50,47 @@ public class PlayerData {
             return;
         }
 
-        //noinspection DuplicatedCode
         whatToSave(t);
 
-        whatToErase(t);
+        whatToEraseEnter(t);
 
-        Boolean giveOp = EnterAdminMode.ChangeTo.op;
-        String gameModeType = EnterAdminMode.ChangeTo.gamemode;
+        Boolean giveOp = EnterAdminMode.ChangeTo.target.op;
+        String gameModeType = EnterAdminMode.ChangeTo.target.gamemode;
 
         if (giveOp) {
             t.setOp(true);
         }
 
         t.setGameMode(GameMode.valueOf(gameModeType));
+
+        PlayersDatabase.get().set(t.getUniqueId() + ".canDisableHimself", config.getBoolean("enterAdminMode.save.canDisableHimself"));
+        PlayersDatabase.save();
+        PlayersDatabase.get().set(t.getUniqueId() + ".beenGivenByAdmin", true);
+        PlayersDatabase.save();
+
+        p.sendMessage(PlayerMessage.targetEnabled);
+
+        t.sendMessage(TargetMessage.enabled);
     }
 
     // DISABLE
 
     public static void disableYourself(Player p) {
-        whatToErase(p);
+        whatToEraseLeave(p);
 
-        loadPlayerData(p);
+        loadPlayerData(p, false);
 
-        Boolean keepOp = LeaveAdminMode.ChangeTo.op;
-        String gameModeType = LeaveAdminMode.ChangeTo.gamemode;
-
-        if (keepOp) {
-            p.setOp(true);
-        }
-
-        p.setGameMode(GameMode.valueOf(gameModeType));
+        p.sendMessage(PlayerMessage.disabled);
     }
 
     public static void disableTarget(Player p, Player t) {
-        whatToErase(t);
+        whatToEraseLeave(t);
 
-        loadPlayerData(t);
+        loadPlayerData(t, true);
 
-        Boolean keepOp = LeaveAdminMode.ChangeTo.op;
-        String gameModeType = LeaveAdminMode.ChangeTo.gamemode;
+        p.sendMessage(PlayerMessage.targetDisabled);
 
-        if (keepOp) {
-            t.setOp(true);
-        }
-
-        t.setGameMode(GameMode.valueOf(gameModeType));
+        t.sendMessage(TargetMessage.disabled);
     }
 
     // CHECK
@@ -101,17 +105,17 @@ public class PlayerData {
 
         assert t != null;
         if (!PlayersDatabase.get().contains(String.valueOf(t.getUniqueId()))) {
-            p.sendMessage(PlayerMessage.targetIsNotAdmin);
+            p.sendMessage(PlayerMessage.targetIsNotAdminMode);
             return false;
         }
 
-        p.sendMessage(PlayerMessage.targetIsAdmin);
+        p.sendMessage(PlayerMessage.targetIsInAdminMode);
         return true;
     }
 
     public static Boolean checkIfPlayerIsAdmin(Player p) {
         if (PlayersDatabase.get().contains(String.valueOf(p.getUniqueId()))) {
-            p.sendMessage(PlayerMessage.playerIsAdmin);
+            p.sendMessage(PlayerMessage.isInAdminMode);
             return true;
         }
 
@@ -134,9 +138,13 @@ public class PlayerData {
         PlayersDatabase.save();
         PlayersDatabase.get().set(uuid + ".location", p.getLocation());
         PlayersDatabase.save();
+        PlayersDatabase.get().set(uuid + ".gamemode", p.getGameMode());
+        PlayersDatabase.save();
+        PlayersDatabase.get().set(uuid + ".op", p.isOp());
+        PlayersDatabase.save();
     }
 
-    private static void savePlayerData(Player p, Boolean inventory, Boolean armor, Boolean exp, Boolean health, Boolean food, Boolean location) {
+    private static void savePlayerData(Player p, Boolean inventory, Boolean armor, Boolean exp, Boolean health, Boolean food, Boolean location, Boolean gamemode, Boolean op) {
         UUID uuid = p.getUniqueId();
         if (inventory) {
             PlayersDatabase.get().set(uuid + ".inv", p.getInventory().getContents());
@@ -160,6 +168,14 @@ public class PlayerData {
         }
         if (location) {
             PlayersDatabase.get().set(uuid + ".location", p.getLocation());
+            PlayersDatabase.save();
+        }
+        if (gamemode) {
+            PlayersDatabase.get().set(uuid + ".gamemode", p.getGameMode());
+            PlayersDatabase.save();
+        }
+        if (op) {
+            PlayersDatabase.get().set(uuid + ".op", p.isOp());
             PlayersDatabase.save();
         }
     }
@@ -205,15 +221,17 @@ public class PlayerData {
 
     // LOAD
 
-    private static void loadPlayerData(Player p) {
+    private static void loadPlayerData(Player p, Boolean isTarget) {
         UUID uuid = p.getUniqueId();
 
         if (PlayersDatabase.get().get(uuid + ".inv") != null) {
+            @SuppressWarnings("unchecked")
             List<ItemStack> inventory = (List<ItemStack>) PlayersDatabase.get().get(uuid + ".inv");
             assert inventory != null;
             p.getInventory().setContents(inventory.toArray(new ItemStack[0]));
         }
         if (PlayersDatabase.get().get(uuid + ".armor") != null) {
+            @SuppressWarnings("unchecked")
             List<ItemStack> armor = (List<ItemStack>) PlayersDatabase.get().get(uuid + ".armor");
             assert armor != null;
             p.getInventory().setArmorContents(armor.toArray(new ItemStack[0]));
@@ -240,6 +258,56 @@ public class PlayerData {
             p.teleport(location);
         }
 
+        if (isTarget) {
+            if (LeaveAdminMode.ChangeTo.target.savedGamemode) {
+                if (PlayersDatabase.get().get(uuid + ".gamemode") != null) {
+                    GameMode gamemode = GameMode.valueOf(PlayersDatabase.get().getString(uuid + ".gamemode"));
+                    p.setGameMode(gamemode);
+                }
+            } else {
+                String gameModeType = LeaveAdminMode.ChangeTo.target.gamemode;
+
+                p.setGameMode(GameMode.valueOf(gameModeType));
+            }
+
+            if (LeaveAdminMode.ChangeTo.target.savedOp) {
+                if (PlayersDatabase.get().get(uuid + ".op") != null) {
+                    boolean op = PlayersDatabase.get().getBoolean(uuid + ".op");
+                    p.setOp(op);
+                }
+            } else {
+                Boolean keepOp = LeaveAdminMode.ChangeTo.target.op;
+
+                if (!keepOp) {
+                    p.setOp(false);
+                }
+            }
+        } else {
+            if (LeaveAdminMode.ChangeTo.player.savedGamemode) {
+                if (PlayersDatabase.get().get(uuid + ".gamemode") != null) {
+                    GameMode gamemode = GameMode.valueOf(PlayersDatabase.get().getString(uuid + ".gamemode"));
+                    p.setGameMode(gamemode);
+                }
+            } else {
+                String gameModeType = LeaveAdminMode.ChangeTo.player.gamemode;
+
+                p.setGameMode(GameMode.valueOf(gameModeType));
+            }
+
+            if (LeaveAdminMode.ChangeTo.player.savedOp) {
+                if (PlayersDatabase.get().get(uuid + ".op") != null) {
+                    boolean op = PlayersDatabase.get().getBoolean(uuid + ".op");
+                    p.setOp(op);
+                }
+            } else {
+                Boolean keepOp = LeaveAdminMode.ChangeTo.player.op;
+
+                if (!keepOp) {
+                    p.setOp(false);
+                }
+            }
+        }
+
         PlayersDatabase.get().set(uuid.toString(), null);
         PlayersDatabase.save();
     }
@@ -258,11 +326,13 @@ public class PlayerData {
             Boolean health = EnterAdminMode.Save.health;
             Boolean food = EnterAdminMode.Save.food;
             Boolean location = EnterAdminMode.Save.location;
-            savePlayerData(p, inv, armor, exp, health, food, location);
+            Boolean gamemode = EnterAdminMode.Save.gamemode;
+            Boolean op = EnterAdminMode.Save.op;
+            savePlayerData(p, inv, armor, exp, health, food, location, gamemode, op);
         }
     }
 
-    private static void whatToErase(Player p) {
+    private static void whatToEraseEnter(Player p) {
         Boolean allErase = EnterAdminMode.Erase.all;
 
         if (allErase) {
@@ -273,6 +343,21 @@ public class PlayerData {
             Boolean exp = EnterAdminMode.Erase.exp;
             Boolean health = EnterAdminMode.Erase.health;
             Boolean food = EnterAdminMode.Erase.food;
+            erasePlayerData(p, inv, armor, exp, health, food);
+        }
+    }
+
+    private static void whatToEraseLeave(Player p) {
+        Boolean allErase = LeaveAdminMode.Erase.all;
+
+        if (allErase) {
+            erasePlayerData(p);
+        } else {
+            Boolean inv = LeaveAdminMode.Erase.inv;
+            Boolean armor = LeaveAdminMode.Erase.armor;
+            Boolean exp = LeaveAdminMode.Erase.exp;
+            Boolean health = LeaveAdminMode.Erase.health;
+            Boolean food = LeaveAdminMode.Erase.food;
             erasePlayerData(p, inv, armor, exp, health, food);
         }
     }

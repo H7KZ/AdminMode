@@ -18,6 +18,10 @@ public class ReloadCommand {
             return;
         }
 
+        if (sender instanceof Player p) {
+            p.sendMessage(PlayerMessage.pluginReloading);
+        }
+
         reload();
 
         if (sender instanceof Player p) {

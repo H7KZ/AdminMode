@@ -9,7 +9,7 @@ public class HelpMessage {
             "§6/AdminMode disable§r: Disable admin mode for a player.",
             "§6/AdminMode enable <player>§r: Enable admin mode for the specified player.",
             "§6/AdminMode disable <player>§r: Disable admin mode for the specified player.",
-            "§6/AdminMode isEnable <player>§r: Enable admin mode for the specified players.",
+            "§6/AdminMode check <player>§r: Enable admin mode for the specified players.",
     };
 
     public static final String[] contentsWithoutReload = {
@@ -19,6 +19,6 @@ public class HelpMessage {
             "§6/AdminMode disable§r: Disable admin mode for a player.",
             "§6/AdminMode enable <player>§r: Enable admin mode for the specified player.",
             "§6/AdminMode disable <player>§r: Disable admin mode for the specified player.",
-            "§6/AdminMode isEnable <player>§r: Enable admin mode for the specified players.",
+            "§6/AdminMode check <player>§r: Enable admin mode for the specified players.",
     };
 }
